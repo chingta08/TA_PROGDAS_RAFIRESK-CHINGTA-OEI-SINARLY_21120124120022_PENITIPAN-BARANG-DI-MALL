@@ -1,0 +1,117 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['items'])) {
+    $_SESSION['items'] = [];
+}
+
+function pushToStack($item) {
+    array_push($_SESSION['items'], $item);
+}
+
+function popFromStack() {
+    return array_pop($_SESSION['items']);
+}
+
+class Item {
+    private $name;
+    private $description;
+    private $ownerName;
+    private $lockerNumber;
+
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function setDescription($description) {
+        $this->description = $description;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function setOwnerName($ownerName) {
+        $this->ownerName = $ownerName;
+    }
+
+    public function getOwnerName() {
+        return $this->ownerName;
+    }
+
+    public function setLockerNumber($lockerNumber) {
+        $this->lockerNumber = $lockerNumber;
+    }
+
+    public function getLockerNumber() {
+        return $this->lockerNumber;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['add_item'])) {
+        $item = new Item();
+        $item->setName($_POST['name']);
+        $item->setDescription($_POST['description']);
+        $item->setOwnerName($_POST['owner_name']);
+        $item->setLockerNumber($_POST['locker_number']);
+        pushToStack($item);
+    } elseif (isset($_POST['remove_item'])) {
+        popFromStack();
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penitipan Barang</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('DP-Mall-Semarang-2.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        label {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Penitipan Barang</h1>
+        <form method="POST" class="mt-4">
+            <div class="form-group">
+                <label for="name">Nama Barang:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Deskripsi Barang:</label>
+                <input type="text" class="form-control" id="description" name="description" required>
+            </div>
+            <div class="form-group">
+                <label for="owner_name">Nama Penitip:</label>
+                <input type="text" class="form-control" id="owner_name" name="owner_name" required>
+            </div>
+            <div class="form-group">
+                <label for="locker_number">Nomor Loker:</label>
+                <input type="text" class="form-control" id="locker_number" name="locker_number" required>
+            </div>
+            <button type="submit" name="add_item" class="btn btn-primary">Tambah Barang</button>
+            <a href="hasil.php" class="btn btn-secondary">Lihat Daftar Barang</a>
+        </form>
+    </div>
+</body>
+</html>
