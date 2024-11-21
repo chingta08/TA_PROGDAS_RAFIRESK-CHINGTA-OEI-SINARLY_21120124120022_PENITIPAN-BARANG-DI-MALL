@@ -1,0 +1,111 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['items'])) {
+    $_SESSION['items'] = [];
+}
+
+if (isset($_GET['delete']) && isset($_SESSION['items'][$_GET['delete']])) {
+
+    unset($_SESSION['items'][$_GET['delete']]);
+  
+    $_SESSION['items'] = array_values($_SESSION['items']);
+}
+
+class Item {
+    private $name;
+    private $description;
+    private $ownerName;
+    private $lockerNumber;
+
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function setDescription($description) {
+        $this->description = $description;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function setOwnerName($ownerName) {
+        $this->ownerName = $ownerName;
+    }
+
+    public function getOwnerName() {
+        return $this->ownerName;
+    }
+
+    public function setLockerNumber($lockerNumber) {
+        $this->lockerNumber = $lockerNumber;
+    }
+
+    public function getLockerNumber() {
+        return $this->lockerNumber;
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Barang</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('DP-Mall-Semarang-2.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        table, th, td {
+            background: white;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Daftar Barang yang Dititipkan</h1>
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>Nama Barang</th>
+                    <th>Deskripsi</th>
+                    <th>Nama Penitip</th>
+                    <th>Nomor Loker</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($_SESSION['items'] as $key => $item) {
+                    echo "<tr>
+                            <td>" . htmlspecialchars($item->getName()) . "</td>
+                            <td>" . htmlspecialchars($item->getDescription()) . "</td>
+                            <td>" . htmlspecialchars($item->getOwnerName()) . "</td>
+                            <td>" . htmlspecialchars($item->getLockerNumber()) . "</td>
+                            <td>
+                                <a href='hasil.php?delete=$key' class='btn btn-danger btn-sm'>Sudah Diambil</a>
+                            </td>
+                          </tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+        <a href="tugasakhir.php" class="btn btn-primary mt-4">Kembali</a>
+    </div>
+</body>
+</html>
